@@ -102,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
                         xValues.add(formattedDate);
 
-
-
                     }
 
                 } catch (JSONException e) {
@@ -130,10 +128,8 @@ public class MainActivity extends AppCompatActivity {
 
                 mChart.setDrawBorders(true);
 
-                // no description text
                 mChart.setDescription("");
 
-                // if disabled, scaling can be done on x- and y-axis separately
                 mChart.setPinchZoom(false);
 
                 Legend l = mChart.getLegend();
@@ -144,8 +140,6 @@ public class MainActivity extends AppCompatActivity {
                 xAxis.setDrawGridLines(false);
                 xAxis.setAxisLineColor(Color.parseColor("#20F5F5F5"));
                 xAxis.setTextColor(Color.parseColor("#50F5F5F5"));
-
-                //final String[] xValues = new String[] { "a", "b", "c" };
 
                 xAxis.setValueFormatter(new AxisValueFormatter() {
                     @Override
@@ -159,8 +153,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-
-
                 YAxis leftAxis = mChart.getAxisLeft();
                 leftAxis.setTextColor(Color.parseColor("#50F5F5F5"));
                 leftAxis.setDrawAxisLine(true);
@@ -173,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                 mChart.getAxisRight().setEnabled(false);
                 LineDataSet set1;
 
-                // create a dataset and give it a type
                 set1 = new LineDataSet(yVals1, "DataSet 1");
 
                 set1.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -187,10 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 set1.setHighLightColor(Color.rgb(244, 117, 117));
                 set1.setDrawCircleHole(false);
 
-
-                dataSets.add(set1); // add the datasets
-
-
+                dataSets.add(set1);
 
                 LineData datab = new LineData(dataSets);
                 datab.setDrawValues(false);
