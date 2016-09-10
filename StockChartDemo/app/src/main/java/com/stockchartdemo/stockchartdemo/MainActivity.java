@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private void makeChart() {
 
         ticker = "AAPL";
-        url = "http://chartapi.finance.yahoo.com/instrument/1.0/AAPL/chartdata;type=quote;range=1d/json";
+        
+        url = "http://chartapi.finance.yahoo.com/instrument/1.0/" + ticker + "/chartdata;type=quote;range=1d/json";
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
                 url, new Response.Listener<String>() {
