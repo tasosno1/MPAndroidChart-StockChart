@@ -16,12 +16,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.AxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.stockchartdemo.stockchartdemo.app.AppController;
 
@@ -29,7 +31,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public  String url, open, time, ticker;
     private LineChart mChart;
     private int mFillColor = Color.argb(150, 51, 181, 229);
+    ArrayList<String> xValues = new ArrayList<String>();
     ArrayList<Entry> yVals1 = new ArrayList<Entry>();
     ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -58,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private void makeChart() {
 
         ticker = "AAPL";
-        
+
         url = "http://chartapi.finance.yahoo.com/instrument/1.0/" + ticker + "/chartdata;type=quote;range=1d/json";
 
         StringRequest strReq = new StringRequest(Request.Method.GET,
@@ -80,13 +86,23 @@ public class MainActivity extends AppCompatActivity {
 
                         JSONObject objv = json.getJSONObject(i);
 
-                       // time = objv.getString("Timestamp");
+                        time = objv.getString("Timestamp");
 
                         open = objv.getString("open");
 
                         float val = Float.parseFloat(open);
 
                         yVals1.add(new Entry(i, val));
+
+                        long unixSeconds = Long.parseLong(time);
+                        Date date = new Date(unixSeconds*1000L);
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                        sdf.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+                        String formattedDate = sdf.format(date);
+
+                        xValues.add(formattedDate);
+
+
 
                     }
 
@@ -127,6 +143,23 @@ public class MainActivity extends AppCompatActivity {
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                 xAxis.setDrawGridLines(false);
                 xAxis.setAxisLineColor(Color.parseColor("#20F5F5F5"));
+                xAxis.setTextColor(Color.parseColor("#50F5F5F5"));
+
+                //final String[] xValues = new String[] { "a", "b", "c" };
+
+                xAxis.setValueFormatter(new AxisValueFormatter() {
+                    @Override
+                    public String getFormattedValue(float value, AxisBase axis) {
+                        return xValues.get((int) value % xValues.size());
+                    }
+
+                    @Override
+                    public int getDecimalDigits() {
+                        return 0;
+                    }
+                });
+
+
 
                 YAxis leftAxis = mChart.getAxisLeft();
                 leftAxis.setTextColor(Color.parseColor("#50F5F5F5"));
@@ -154,7 +187,10 @@ public class MainActivity extends AppCompatActivity {
                 set1.setHighLightColor(Color.rgb(244, 117, 117));
                 set1.setDrawCircleHole(false);
 
+
                 dataSets.add(set1); // add the datasets
+
+
 
                 LineData datab = new LineData(dataSets);
                 datab.setDrawValues(false);
@@ -165,4 +201,5 @@ public class MainActivity extends AppCompatActivity {
         }, 1000);
 
     }
+
 }
